@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	hashtables "github.com/sarrietav-dev/interview-practice/hash-tables"
+	hashtables "github.com/sarrietav-dev/interview-practice/hash_tables"
 )
 
 func TestAddToChain(t *testing.T) {
