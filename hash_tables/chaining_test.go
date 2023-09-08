@@ -186,3 +186,15 @@ func TestDeleteMiddleItemInAChain(t *testing.T) {
 		t.Errorf("Error expected to be nil but instead %s was returned", err)
 	}
 }
+
+func TestPrint(t *testing.T) {
+	ht := hashtables.NewChainingHT[int]()
+
+	ht.Add("hello", 1)
+	ht.Add("world", 2)
+	ht.Add("thing>", 3)
+	ht.Add("sebas", 4)
+	ht.Add("isa", 5)
+
+	ht.Print()
+}

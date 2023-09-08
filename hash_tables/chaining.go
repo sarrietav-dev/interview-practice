@@ -2,6 +2,7 @@ package hashtables
 
 import (
 	"errors"
+	"fmt"
 	"hash/fnv"
 )
 
@@ -82,4 +83,14 @@ func (ht *ChainingHashTable[T]) Set(k string, v T) error {
 	}
 
 	return errors.New("key not found")
+}
+
+func (ht *ChainingHashTable[T]) Print() {
+	for i, item := range ht.table {
+		fmt.Printf("%d: ", i)
+		for ; item != nil; item = item.Next {
+			fmt.Printf("(%s, %v) ", item.Key, item.Value)
+		}
+		fmt.Println()
+	}
 }
