@@ -198,3 +198,21 @@ func TestPrint(t *testing.T) {
 
 	ht.Print()
 }
+
+func TestLoadFactor(t *testing.T) {
+	ht := hashtables.NewChainingHT[int]()
+
+	ht.Add("hello", 1)
+	ht.Add("world", 2)
+	ht.Add("thing>", 3)
+	ht.Add("sebas", 4)
+	ht.Add("isa", 5)
+	ht.Add("isa2", 6)
+	ht.Add("isa3", 7)
+	ht.Add("isa4", 8)
+	ht.Add("isa5", 9)
+
+	if ht.LoadFactor() >= 1 {
+		t.Errorf("Load factor expected to be less than 1 but instead %f was returned", ht.LoadFactor())
+	}
+}

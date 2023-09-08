@@ -7,7 +7,8 @@ import (
 )
 
 type ChainingHashTable[T comparable] struct {
-	table []*chain[T]
+	table  []*chain[T]
+	keyLen int
 }
 
 type chain[T comparable] struct {
@@ -17,7 +18,7 @@ type chain[T comparable] struct {
 }
 
 func NewChainingHT[T comparable]() *ChainingHashTable[T] {
-	return &ChainingHashTable[T]{make([]*chain[T], 8)}
+	return &ChainingHashTable[T]{table: make([]*chain[T], 8), keyLen: 0}
 }
 
 func (ht *ChainingHashTable[T]) hashFunction(k string) uint32 {
@@ -31,12 +32,21 @@ func (ht *ChainingHashTable[T]) Add(k string, v T) {
 
 	if ht.table[i] == nil {
 		ht.table[i] = &chain[T]{k, v, nil}
+		ht.keyLen++
+
+		if ht.keyLen > len(ht.table) {
+			ht.grow()
+		}
 		return
 	}
 
 	for item := ht.table[i]; item != nil; item = item.Next {
 		if item.Next == nil {
 			item.Next = &chain[T]{k, v, nil}
+			ht.keyLen++
+			if ht.keyLen > len(ht.table) {
+				ht.grow()
+			}
 			return
 		}
 	}
@@ -63,6 +73,10 @@ func (ht *ChainingHashTable[T]) Del(k string) (T, error) {
 		if (**item).Key == k {
 			value := (*item).Value
 			*item = (*item).Next
+			ht.keyLen--
+			if ht.keyLen < len(ht.table)/4 {
+				ht.shrink()
+			}
 			return value, nil
 		}
 	}
@@ -93,4 +107,60 @@ func (ht *ChainingHashTable[T]) Print() {
 		}
 		fmt.Println()
 	}
+}
+
+func (ht *ChainingHashTable[T]) grow() {
+	newHt := make([]*chain[T], len(ht.table)*2)
+
+	for _, item := range ht.table {
+		for ; item != nil; item = item.Next {
+			h := fnv.New32a()
+			h.Write([]byte(item.Key))
+			i := h.Sum32() % uint32(len(newHt))
+
+			if newHt[i] == nil {
+				newHt[i] = &chain[T]{item.Key, item.Value, nil}
+				continue
+			}
+
+			for newItem := newHt[i]; newItem != nil; newItem = newItem.Next {
+				if newItem.Next == nil {
+					newItem.Next = &chain[T]{item.Key, item.Value, nil}
+					break
+				}
+			}
+		}
+	}
+
+	ht.table = newHt
+}
+
+func (ht *ChainingHashTable[T]) shrink() {
+	newHt := make([]*chain[T], len(ht.table)/2)
+
+	for _, item := range ht.table {
+		for ; item != nil; item = item.Next {
+			h := fnv.New32a()
+			h.Write([]byte(item.Key))
+			i := h.Sum32() % uint32(len(newHt))
+
+			if newHt[i] == nil {
+				newHt[i] = &chain[T]{item.Key, item.Value, nil}
+				continue
+			}
+
+			for newItem := newHt[i]; newItem != nil; newItem = newItem.Next {
+				if newItem.Next == nil {
+					newItem.Next = &chain[T]{item.Key, item.Value, nil}
+					break
+				}
+			}
+		}
+	}
+
+	ht.table = newHt
+}
+
+func (ht *ChainingHashTable[T]) LoadFactor() float32 {
+	return float32(ht.keyLen) / float32(len(ht.table))
 }
