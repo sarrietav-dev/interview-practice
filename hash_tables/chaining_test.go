@@ -115,11 +115,7 @@ func TestKeyUpdate(t *testing.T) {
 
 	ht.Add("key", "value")
 
-	err := ht.Set("key", "newvalue")
-
-	if err != nil {
-		t.Errorf("Error expected to be nil but instead %s was returned", err)
-	}
+	ht.Add("key", "newvalue")
 
 	value, err := ht.Get("key")
 

@@ -41,6 +41,11 @@ func (ht *ChainingHashTable[T]) Add(k string, v T) {
 	}
 
 	for item := ht.table[i]; item != nil; item = item.Next {
+		if item.Key == k {
+			item.Value = v
+			return
+		}
+
 		if item.Next == nil {
 			item.Next = &chain[T]{k, v, nil}
 			ht.keyLen++
@@ -84,19 +89,6 @@ func (ht *ChainingHashTable[T]) Del(k string) (T, error) {
 	var null T
 
 	return null, errors.New("key not found")
-}
-
-func (ht *ChainingHashTable[T]) Set(k string, v T) error {
-	i := ht.hashFunction(k)
-
-	for item := ht.table[i]; item != nil; item = item.Next {
-		if item.Key == k {
-			item.Value = v
-			return nil
-		}
-	}
-
-	return errors.New("key not found")
 }
 
 func (ht *ChainingHashTable[T]) Print() {
