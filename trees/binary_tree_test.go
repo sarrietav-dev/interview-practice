@@ -34,6 +34,12 @@ func TestPreOrderTraversal(t *testing.T) {
 	trees.PreOrderTraversal(bt)
 }
 
+func TestBreadthFirstSearch(t *testing.T) {
+	bt := getTreeFixture()
+
+	trees.BreadthFirstSearch(bt)
+}
+
 func getTreeFixture() *trees.BinaryTree {
 
 	bt := &trees.BinaryTree{Value: 1}

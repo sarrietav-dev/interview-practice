@@ -1,6 +1,10 @@
 package trees
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/sarrietav-dev/interview-practice/queues"
+)
 
 type BinaryTree struct {
 	Value int
@@ -42,4 +46,24 @@ func PreOrderTraversal(bt *BinaryTree) {
 	fmt.Println(bt.Value)
 	PreOrderTraversal(bt.Left)
 	PreOrderTraversal(bt.Right)
+}
+
+func BreadthFirstSearch(bt *BinaryTree) {
+	if bt == nil {
+		return
+	}
+
+	queue := queues.Queue[*BinaryTree]{}
+	queue.Enqueue(bt)
+
+	for !queue.IsEmpty() {
+		node := queue.Dequeue()
+		fmt.Println(node.Value)
+		if node.Left != nil {
+			queue.Enqueue(node.Left)
+		}
+		if node.Right != nil {
+			queue.Enqueue(node.Right)
+		}
+	}
 }
