@@ -18,7 +18,7 @@ func TestParent(t *testing.T) {
 
 func TestLeft(t *testing.T) {
 	i := 5
-	expected := 10
+	expected := 11
 	actual := heaps.Left(i)
 	if actual != expected {
 		t.Errorf("Right of %d should be %d but got %d", i, expected, actual)
@@ -27,7 +27,7 @@ func TestLeft(t *testing.T) {
 
 func TestRight(t *testing.T) {
 	i := 5
-	expected := 11
+	expected := 12
 	actual := heaps.Right(i)
 	if actual != expected {
 		t.Errorf("Right of %d should be %d but got %d", i, expected, actual)
