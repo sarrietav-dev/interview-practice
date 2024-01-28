@@ -1,6 +1,8 @@
 package isbalanced
 
-import "math"
+import (
+	"math"
+)
 
 type TreeNode struct {
 	Val   int
