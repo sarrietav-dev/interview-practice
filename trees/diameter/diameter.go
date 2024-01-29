@@ -6,6 +6,7 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+// https://leetcode.com/problems/diameter-of-binary-tree
 func DiameterOfBinaryTree(root *TreeNode) int {
 	if root == nil {
 		return 0
